@@ -161,3 +161,4 @@
 .vscode/Pico-W-Stub/uasyncio/stream.pyi
 utils/myWLAN_config.py
 .micropico
+secret.py
