@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LED Steuerung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column; /* Elemente vertikal anordnen */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            background-color: #222;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            margin-bottom: 20px; /* Abstand zwischen den Boxen */
+        }
+
+        .box h2 {
+            margin: 0 0 20px 0;
+        }
+
+        .button, input[type="time"] {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="time"] {
+            background-color: #333;
+            border: 1px solid #555;
+            cursor: text;
+        }
+
+        .button:hover, input[type="time"]:hover {
+            background-color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .box {
+                width: 80%;
+            }
+
+            .button, input[type="time"] {
+                font-size: 16px;
+            }
+        }
+		
+        .alarm-list {
+            text-align: left;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .alarm-item {
+            border-bottom: 1px solid #555;
+            padding: 10px 0;
+            background-color: #222; /* Standard Hintergrundfarbe */
+        }
+
+        .alarm-item:nth-child(odd) {
+            background-color: #252525; /* Hintergrundfarbe für ungerade Elemente */
+        }
+
+        .alarm-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alarm-time {
+            font-family: Arial Black, sans-serif;
+            font-size: 2.2em; /* Größere Schriftgröße */
+            text-align: right; /* Rechtsbündig */
+            padding: 0px 20px;
+            flex-grow: 1;
+        }
+
+        .weekdays {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .weekday {
+            color: #666; /* Standardfarbe für Wochentage */
+        }
+
+        .weekday.highlight {
+            color: #fafafa; /* Hervorgehobene Farbe für Mo-Fr */
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>LED Status: **ledState**</h2>
+        <form action="/ledon">
+            <input type="submit" class="button" value="LED Einschalten">
+        </form>
+        <form action="/ledoff">
+            <input type="submit" class="button" value="LED Ausschalten">
+        </form>
+    </div>
+
+    <div class="box">
+        <h2>Alarm setzen</h2>
+        <form action="/setalarm">
+            <input type="time" id="appt" name="appt" min="00:00" max="23:59" required>
+            <input type="submit" class="button" value="Alarm setzen">
+        </form>
+    </div>
+	<div class="box">
+        <h2>Alarme</h2>
+        <ul class="alarm-list">
+            <li class="alarm-item">
+                <div class="alarm-row">
+                    <form action="/togglealarm1">
+                        <input type="submit" class="button" value="An/Aus">
+                    </form>
+                    <span class="alarm-time">07:30</span>
+                </div>
+                <div class="weekdays">
+                    <span class="weekday highlight">Mo</span>
+                    <span class="weekday highlight">Di</span>
+                    <span class="weekday highlight">Mi</span>
+                    <span class="weekday highlight">Do</span>
+                    <span class="weekday highlight">Fr</span>
+                    <span class="weekday">Sa</span>
+                    <span class="weekday">So</span>
+                </div>
+            </li>
+            <li class="alarm-item">
+                <div class="alarm-row">
+                    <form action="/togglealarm1">
+                        <input type="submit" class="button" value="An/Aus">
+                    </form>
+                    <span class="alarm-time">07:30</span>
+                </div>
+                <div class="weekdays">
+                    <span class="weekday highlight">Mo</span>
+                    <span class="weekday highlight">Di</span>
+                    <span class="weekday highlight">Mi</span>
+                    <span class="weekday highlight">Do</span>
+                    <span class="weekday highlight">Fr</span>
+                    <span class="weekday">Sa</span>
+                    <span class="weekday">So</span>
+                </div>
+            </li>
+            <!-- Weitere Alarme hier einfügen -->
+        </ul>
+    </div>
+</body>
+</html>
