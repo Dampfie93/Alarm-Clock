@@ -10,12 +10,11 @@ from utils.myTime import timeStr, clockStr, roundedStr, dateStr, isLeapYear, tim
 
 class Display():
                
-    def __init__(self, active_screen, time_h=0, time_s=0, top_str=""):
-        self.active_screen  = active_screen
-        self.time_h         = time_h
-        self.time_m         = time_s
-        self.top_str        = top_str
-        self.init           = False
+    def __init__(self):
+        self.active_screen  = None
+        self.time_h         = 0
+        self.time_m         = 0
+        self.top_str        = ""
         self.last_refresh   = True
 
     def checkTime(self):
@@ -45,8 +44,7 @@ class Display():
                     epd.pixel(x + x_offset, y + y_offset, 0x00)
 
     def show(self, typ, refresh):
-        if typ == "init": return
-        self.top_str       = ""
+        self.top_str = ""
         self.active_screen = typ
         print(f"Active Screen: {self.active_screen}")
         if refresh == True:
@@ -90,10 +88,9 @@ class Display():
             epd.display_Partial(epd.buffer)
         self.last_refresh = refresh
         epd.sleep()
-        
-        
+
+
 epd = EPD()
-display = Display("init")
-        
+
 if __name__ == "__main__":
-    main()
+    display = Display("init")

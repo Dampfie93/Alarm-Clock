@@ -40,6 +40,11 @@ DC_PIN          = 8
 CS_PIN          = 9
 BUSY_PIN        = 13
 
+# key
+KEY0 = 2
+KEY1 = 3
+KEY2 = 15
+
 WF_PARTIAL_2IN9 = [
     0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
     0x80,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
@@ -91,17 +96,30 @@ class EPD(framebuf.FrameBuffer):
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
 
+        self.key0 = Pin(KEY0, Pin.IN, Pin.PULL_UP)
+        self.key1 = Pin(KEY1, Pin.IN, Pin.PULL_UP)
+        self.key2 = Pin(KEY2, Pin.IN, Pin.PULL_UP)
         
         self.partial_lut = WF_PARTIAL_2IN9
         self.full_lut = WS_20_30
         
         self.spi = SPI(1)
-        self.spi.init(baudrate=4000_000)
+        self.spi.init(baudrate=4000_000) # type: ignore
         self.dc_pin = Pin(DC_PIN, Pin.OUT)
         
         self.buffer = bytearray(self.height * self.width // 8)
         super().__init__(self.buffer, self.height, self.width, framebuf.MONO_VLSB)
         self.init()
+
+    def get_key(self):
+        if(self.digital_read(self.key0) == 0):
+            return 1
+        elif(self.digital_read(self.key1) == 0):
+            return 2
+        elif(self.digital_read(self.key2) == 0):
+            return 3
+        else:
+            return 0
 
     def digital_write(self, pin, value):
         pin.value(value)
