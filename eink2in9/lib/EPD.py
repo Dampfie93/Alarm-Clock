@@ -40,11 +40,6 @@ DC_PIN          = 8
 CS_PIN          = 9
 BUSY_PIN        = 13
 
-# key
-KEY0 = 2
-KEY1 = 3
-KEY2 = 15
-
 WF_PARTIAL_2IN9 = [
     0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
     0x80,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
@@ -95,10 +90,6 @@ class EPD(framebuf.FrameBuffer):
         self.cs_pin = Pin(CS_PIN, Pin.OUT)
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
-
-        self.key0 = Pin(KEY0, Pin.IN, Pin.PULL_UP)
-        self.key1 = Pin(KEY1, Pin.IN, Pin.PULL_UP)
-        self.key2 = Pin(KEY2, Pin.IN, Pin.PULL_UP)
         
         self.partial_lut = WF_PARTIAL_2IN9
         self.full_lut = WS_20_30

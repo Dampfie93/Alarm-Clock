@@ -1,9 +1,9 @@
-from ePaper2in9.lib.EPD    import EPD
-from ePaper2in9.lib.writer import Writer
+from eink2in9.lib.EPD    import EPD
+from eink2in9.lib.writer import Writer
 
-from ePaper2in9.fonts import Arial72       as FONT_BIG
-from ePaper2in9.fonts import freesans20    as FONT_MEDIUM
-from ePaper2in9.fonts import Arial72_clock as FONT_CLOCK
+from eink2in9.fonts import Arial72       as FONT_BIG
+from eink2in9.fonts import freesans20    as FONT_MEDIUM
+from eink2in9.fonts import Arial72_clock as FONT_CLOCK
 
 from time         import sleep, time, gmtime, mktime
 from utils.myTime import timeStr, clockStr, roundedStr, dateStr, isLeapYear, timeToDate
