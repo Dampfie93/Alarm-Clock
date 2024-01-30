@@ -1,6 +1,6 @@
 from dfplayer import *
 from eink2in9 import *
-from RC522      import *
+from rc522      import *
 from utils      import *
 from alarm_manager import Alarm
 
