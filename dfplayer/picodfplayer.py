@@ -1,7 +1,7 @@
 #DFPlayer mp3 player Driver using UART for Raspberry Pi Pico.
 
 from machine import UART, Pin
-from utime import sleep_ms, sleep
+from time import sleep_ms, sleep
 
 #Constants
 

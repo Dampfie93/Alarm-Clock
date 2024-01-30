@@ -6,7 +6,7 @@ import os
 import time
 import _thread
 from alarm_manager import Alarm
-from utils import clockStr
+from utils import convert_datetime, convert_unix
 
 AP_NAME = "Wecker"
 AP_DOMAIN = "pico.de"
@@ -21,26 +21,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def convert_unix_to_datetime_local(unix_time=None):
-    if unix_time is None:
-        unix_time = time.time()
-    year, month, day, hour, minute, _, _, _ = time.localtime(unix_time)
-    return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}".format(year, month, day, hour, minute)
 
-def convert_datetime_local_to_unix(datetime_time):
-    date_part, time_part = datetime_time.split('T')
-    year, month, day     = map(int, date_part.split('-'))
-    hour, minute         = map(int, time_part.split(':'))
-    tm = (year, month, day, hour, minute, 0, -1, -1, -1)
-    unix_timestamp = time.mktime(tm)
-    return unix_timestamp
-
-def convert_datetime_to_rtc(datetime_time):
-    date_part, time_part = datetime_time.split('T')
-    year, month, day     = map(int, date_part.split('-'))
-    hour, minute         = map(int, time_part.split(':'))
-    tm = (year, month, day, -1, hour, minute, 0, 0)
-    return tm
 
 
 def setup_mode():
@@ -91,9 +72,8 @@ def application_mode():
         return datetime_time
 
     def set_rtc_time(request):
-        datetime_time = request.form.get("datetime")
-        tuple_time = convert_datetime_to_rtc(datetime_time)
-        machine.RTC().datetime(tuple_time)
+        tuple = convert_datetime("rtc", request.form.get("datetime"))
+        machine.RTC().datetime(tuple)
         return render_template(f"{APP_TEMPLATE_PATH}/index.html", datetime_time = get_datetime())
 
     def app_get_time(request):
@@ -150,7 +130,7 @@ def application_mode():
         str = "<h2>Alarme</h2>"
         for i, alarm in enumerate(Alarm.alarm_list):
             # Get alarm data
-            time = clockStr(alarm.time)
+            time = convert_unix("clock", alarm.time)
             active = alarm.active
             repeat = alarm.repeat
             checked = "checked" if active else ""

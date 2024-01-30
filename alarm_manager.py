@@ -1,5 +1,5 @@
 from time import sleep, sleep_ms, time, gmtime, mktime
-from utils import FileManager, log, timeStr, clockStr, roundedStr, dateStr, isLeapYear, timeToDate
+from utils import FileManager, log, convert_unix, convert_datetime
 
 
 class Alarm(FileManager):
@@ -64,7 +64,7 @@ class Alarm(FileManager):
                 if self.weekday[nextDay] =="1":
                     self.time +=i*24*3600
                     #self.time +=20
-                    log("ALARM", f"next: {timeToDate(self.time)} at {timeStr(self.time)}")
+                    log("ALARM", f"next: {convert_unix("date", self.time)} at {convert_unix('time', self.time)}")
                     break
         Alarm.setAlarmListtoJson()
 
