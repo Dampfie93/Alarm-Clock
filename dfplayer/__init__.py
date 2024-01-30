@@ -1,3 +1,3 @@
-from dfplayermini import Player
+from dfplayer.picodfplayer import DFPlayer
 
-__all__ = ['Player']
+__all__ = ['DFPlayer']
