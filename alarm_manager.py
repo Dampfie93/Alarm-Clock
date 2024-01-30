@@ -64,7 +64,7 @@ class Alarm(FileManager):
                 if self.weekday[nextDay] =="1":
                     self.time +=i*24*3600
                     #self.time +=20
-                    log("ALARM", f"next: {convert_unix("date", self.time)} at {convert_unix('time', self.time)}")
+                    log("ALARM", f"next: {convert_unix('date', self.time)} at {convert_unix('time', self.time)}")
                     break
         Alarm.setAlarmListtoJson()
 
