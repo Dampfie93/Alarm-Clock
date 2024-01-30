@@ -5,7 +5,7 @@ from utils      import *
 from alarm_manager import Alarm
 
 from time import sleep, time, gmtime, mktime
-import machine
+import machine  #type: ignore
 import _thread
 
 led_onboard = machine.Pin('LED', machine.Pin.OUT, value=0)
@@ -26,7 +26,7 @@ def init():
 
     log ("DEBUG",  f"ALARMS: {len(Alarm.alarm_list)}")
     log ("DEBUG",  f"RFIDS: {len(RFIDManager.rfids)}")
-    log ("DEBUG", f"{dateStr()}")
+    log ("DEBUG", f"{convert_unix('date')}")
     display.show("hello", True)
     try:
         ip = WLAN.connect()
@@ -73,7 +73,7 @@ def main():
 
         # Alarm State
         elif state() == "alarm":
-            print(f"[{timeStr(time())}] [ALARM] wartet auf rfid")
+            print(f"[{convert_unix('time')}] [ALARM] wartet auf rfid")
             if RFIDManager.check():
                 state("alarm_off")
                 state("time")

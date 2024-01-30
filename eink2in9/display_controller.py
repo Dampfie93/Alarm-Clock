@@ -6,7 +6,7 @@ from eink2in9.fonts import freesans20    as FONT_MEDIUM
 from eink2in9.fonts import Arial72_clock as FONT_CLOCK
 
 from time         import sleep, time, gmtime, mktime
-from utils.myTime import timeStr, clockStr, roundedStr, dateStr, isLeapYear, timeToDate
+from utils.myTime import convert_unix, convert_datetime
 
 class Display():
                
@@ -57,7 +57,7 @@ class Display():
 
             wri = Writer(epd, FONT_CLOCK)
             wri.set_textpos(epd, 0, 30)
-            wri.printstring(clockStr(time()), invert=True)
+            wri.printstring(convert_unix("clock"), invert=True)
             
         elif typ == "alarm":
             wri = Writer(epd, FONT_BIG)

@@ -1,7 +1,6 @@
-from webserver.phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
-from webserver.phew.template import render_template
+from webserver import *
 import json
-import machine
+import machine #type: ignore
 import os
 import time
 import _thread
@@ -15,6 +14,7 @@ AP_TEMPLATE_PATH = PACKAGES_PATH + "ap_templates"
 APP_TEMPLATE_PATH = PACKAGES_PATH + "app_templates"
 WIFI_FILE = PACKAGES_PATH + "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
+
 
 def machine_reset():
     time.sleep(1)
