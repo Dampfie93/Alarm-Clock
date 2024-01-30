@@ -21,10 +21,10 @@ class RFIDReader():
         
     @staticmethod
     def power(state):
-        if state is None or "off":
-            pwr_rfid.off()
-        else:
+        if state:
             pwr_rfid.on()
+        else:
+            pwr_rfid.off()
             
 class RFIDManager():
 
@@ -44,7 +44,9 @@ class RFIDManager():
     
     @classmethod
     def check(cls):
+        RFIDReader.power(True)
         card = RFIDReader.read()
         for rfid in cls.rfids:
             if rfid[1] == card:
+                RFIDReader.power(False)
                 return True

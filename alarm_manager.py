@@ -29,7 +29,24 @@ class Alarm(FileManager):
         ]
         return ', '.join([f"{value}" for value in attributes_order])
 
-    def check(self):
+    @classmethod
+    def checkList(cls):
+        for alarm in cls.alarm_list:
+            if alarm.checkAlarm() is False:
+                return False
+            elif alarm.checkAlarm() is None:
+                cls.alarm_list.remove(alarm) # type: ignore
+                cls.to_json(Alarm.alarm_list)
+                log("ALARM", "Snooze deleted")
+                return False
+            elif alarm.checkAlarm():
+                alarm.setNextTrigger() # type: ignore
+                log("ALARM", f"activated")
+                return True
+        return False
+
+
+    def checkAlarm(self):
         if self.repeat == -1 and not self.active:
             return None
         else:

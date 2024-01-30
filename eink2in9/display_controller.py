@@ -88,6 +88,10 @@ class Display():
             epd.display_Partial(epd.buffer)
         self.last_refresh = refresh
         epd.sleep()
+    
+    def update_time(self):
+        if self.checkTime() == False:
+            self.show("time", False)
 
 
 epd = EPD()
