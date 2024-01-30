@@ -1,12 +1,12 @@
-from time import sleep, sleep_ms, time, gmtime, mktime
+from time import sleep, sleep_ms, time, gmtime, mktime, localtime
 from utils import FileManager, log, convert_unix, convert_datetime
 
 
 class Alarm(FileManager):
     
-    alarm_list = [(True, time()+20,  0)]
+    alarm_list = []
 
-    def __init__(self, active, time, repeat, weekday="1111111", snooze=1, snoozetime=7, sound=0, rfid=0):
+    def __init__(self, active, time, repeat, weekday="1111111", snooze=None, snoozetime=None, sound=None, rfid=None):
         self.active     = active
         self.time       = time
         self.repeat     = repeat
@@ -67,6 +67,48 @@ class Alarm(FileManager):
                     log("ALARM", f"next: {convert_unix('date', self.time)} at {convert_unix('time', self.time)}")
                     break
         Alarm.setAlarmListtoJson()
+    
+    @staticmethod
+    def _nextActiveDay(current_wday, weekday_str):
+        """
+        Determine the next active day after the current weekday, based on the weekday string.
+        """
+        for i in range(1, 8):  # Start from the next day (i = 1)
+            next_wday = (current_wday + i) % 7
+            if weekday_str[next_wday] == '1':
+                return i  # Number of days to add to current day
+        return None  # No active days found
+
+    @classmethod
+    def addAlarm(cls, hour, minute, repeat, weekday):
+        # Adjusting for timezone
+        timezone = 0
+        utc_offset_seconds = timezone * 3600  # Convert hours to seconds
+
+        # Current time in local timezone
+        now = localtime(time() + utc_offset_seconds)
+        alarm_time = mktime((now[0], now[1], now[2], hour, minute, 0, now[6], now[7]))
+
+        # Check if today
+        if weekday[now[6]] == '1' and alarm_time > time() + utc_offset_seconds:
+            pass  # Alarm is set for today
+        else:
+            # Find the next active day
+            days_to_add = cls._nextActiveDay(now[6], weekday)
+            if days_to_add is not None:
+                alarm_time += days_to_add * 86400  # Add the necessary days in seconds
+        
+        # Adjusting alarm time back to UTC
+        alarm_time -= utc_offset_seconds
+
+        # Create and add the new alarm
+        new_alarm = cls(True, alarm_time, repeat, weekday)
+        cls.alarm_list.append(new_alarm)
+        print(f"Added alarm: {new_alarm}")
+
+        # Update alarm list
+        cls.setAlarmListtoJson()
+        return alarm_time, repeat, weekday
 
     @classmethod
     def getNextAlarm(cls):

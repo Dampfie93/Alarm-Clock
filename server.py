@@ -13,7 +13,7 @@ PACKAGES_PATH = "webserver/"
 AP_TEMPLATE_PATH = PACKAGES_PATH + "ap_templates"
 APP_TEMPLATE_PATH = PACKAGES_PATH + "app_templates"
 WIFI_FILE = PACKAGES_PATH + "wifi.json"
-WIFI_MAX_ATTEMPTS = 3
+WIFI_MAX_ATTEMPTS = 10
 
 
 def machine_reset():
@@ -29,6 +29,7 @@ def setup_mode():
     
     def ap_index(request):
         if request.headers.get("host").lower() != AP_DOMAIN.lower():
+            set_alarm_list()
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
 
         return render_template(f"{AP_TEMPLATE_PATH}/index.html")
