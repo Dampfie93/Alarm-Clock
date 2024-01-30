@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pi Pico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="/" />
+    <style>
+        {{render_template(f"{APP_TEMPLATE_PATH}/style.css")}}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Alarm eingestellt</h1>
+        <h2>Zeit: {{alarmtime}}</h2>
+        <h3>Wochentage: {{weekdays}}</h3>
+    </div>
+</body>
+</html>

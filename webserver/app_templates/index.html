@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Raspberry Pi Pico W</title>
+        <style>
+            {{render_template(f"{APP_TEMPLATE_PATH}/style.css")}}
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h2>Alarm setzen</h2>
+            <form action="/setalarm" method="POST">
+                <input type="time" id="alarmtime" name="alarmtime" min="00:00" max="23:59" required>
+                <div class="weekday">
+                    <input type="checkbox" class="weekday" id="cbox_mon" name="cbox_mon">
+                    <label for="cbox_mon"  class="weekday">Mo</label>
+                    <input type="checkbox" class="weekday" id="cbox_tue" name="cbox_tue">
+                    <label for="cbox_tue"  class="weekday">Di</label>
+                    <input type="checkbox" class="weekday" id="cbox_wed" name="cbox_wed">
+                    <label for="cbox_wed"  class="weekday">Mi</label>
+                    <input type="checkbox" class="weekday" id="cbox_thu" name="cbox_thu">
+                    <label for="cbox_thu"  class="weekday">Do</label>
+                    <input type="checkbox" class="weekday" id="cbox_fri" name="cbox_fri">
+                    <label for="cbox_fri"  class="weekday">Fr</label>
+                    <input type="checkbox" class="weekday" id="cbox_sat" name="cbox_sat">
+                    <label for="cbox_sat"  class="weekday">Sa</label>
+                    <input type="checkbox" class="weekday" id="cbox_sun" name="cbox_sun">
+                    <label for="cbox_sun"  class="weekday">So</label>
+                </div>
+                <input type="submit" class="button" value="Alarm setzen">
+            </form>
+        </div>
+        <div class='box'>
+            {{render_template(f"{APP_TEMPLATE_PATH}/alarm_list.html")}}
+        </div>
+        <div class="box">
+            <form action="/setrtc" method="POST">
+                <input type="datetime-local" id="datetime" name="datetime" value="{{datetime_time}}" required>
+                <input type="submit" class="button" value="Zeit einstellen">
+            </form>
+        </div>
+        <script src="data:text/javascript,document.getElementById('toggleBtn').onclick = async function() { await fetch('/toggle'); };" defer></script>
+        <script src="data:text/javascript,document.getElementById('resetBtn').onclick = function() { window.location.href = '/reset'; };" defer></script>
+    </body>
+</html>
