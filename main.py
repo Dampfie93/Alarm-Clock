@@ -2,9 +2,10 @@ from dfplayer import *
 from eink2in9 import *
 from rc522      import *
 from utils      import *
+from webserver  import *
 from alarm_manager import Alarm
 
-from time import sleep, time, gmtime, mktime
+from time import sleep, time
 import machine  #type: ignore
 import _thread
 
@@ -15,25 +16,21 @@ keys = [Key(0, pin=2), Key(1, pin=3), Key(2, pin=15)]
 
 MAIN_STATE = None
 
-def init():
+def testAlarmList():
     alarm_list_init = [
         # Alarm(True, time()+20,  0),
         # Alarm(True, time()+7200, 1, "1111111")
     ]
-
     Alarm.setAlarmListtoJson(alarm_list_init)
     Alarm.getAlarmListfromJson()
 
+def init():
     log ("DEBUG",  f"ALARMS: {len(Alarm.alarm_list)}")
     log ("DEBUG",  f"RFIDS: {len(RFIDManager.rfids)}")
     log ("DEBUG", f"{convert_unix('date')}")
     display.show("hello", True)
-    try:
-        ip = WLAN.connect()
-        setTimeAPI()
-        print(gmtime()[3],":",gmtime()[4],":",gmtime()[5])
-    except:
-        pass
+
+    # server.run()
     state("time")
 
 def state(state=None):
@@ -90,5 +87,11 @@ def blinkLED():
 
 if __name__ == "__main__":
     init()
+    if not connect_wifi():
+        setup_mode()
+    else:
+        setTimeAPI()
+        application_mode()
+    _thread.start_new_thread(server.run(), ())
     main()
     # _thread.start_new_thread(main, ())

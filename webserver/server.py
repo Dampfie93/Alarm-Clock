@@ -22,14 +22,11 @@ def machine_reset():
     machine.reset()
 
 
-
-
 def setup_mode():
     print("Entering setup mode...")
     
     def ap_index(request):
         if request.headers.get("host").lower() != AP_DOMAIN.lower():
-            set_alarm_list()
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
 
         return render_template(f"{AP_TEMPLATE_PATH}/index.html")
@@ -185,40 +182,46 @@ def application_mode():
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
-# Figure out which mode to start up in...
-try:
-    os.stat(WIFI_FILE)
-    
-    # File was found, attempt to connect to wifi...
-    with open(WIFI_FILE) as f:
-        wifi_current_attempt = 1
-        wifi_credentials = json.load(f)
+
+def connect_wifi():
+    try:
+        os.stat(WIFI_FILE)
         
-        while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
-            ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
-
-            if is_connected_to_wifi():
-                print(f"Connected to wifi, IP address {ip_address}")
-                break
-            else:
-                wifi_current_attempt += 1
-                
-        if is_connected_to_wifi():
-            application_mode()
-        else:
+        # File was found, attempt to connect to wifi...
+        with open(WIFI_FILE) as f:
+            wifi_current_attempt = 1
+            wifi_credentials = json.load(f)
             
-            # Bad configuration, delete the credentials file, reboot
-            # into setup mode to get new credentials from the user.
-            print("Bad wifi connection!")
-            print(wifi_credentials)
-            os.remove(WIFI_FILE)
-            machine_reset()
+            while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
+                ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
 
-except Exception:
-    # Either no wifi configuration file found, or something went wrong, 
-    # so go into setup mode.
-    setup_mode()
+                if is_connected_to_wifi():
+                    print(f"Connected to wifi, IP address {ip_address}")
+                    break
+                else:
+                    wifi_current_attempt += 1
+                    
+            if is_connected_to_wifi():
+                return True
+            else:
+                
+                # Bad configuration, delete the credentials file, reboot
+                # into setup mode to get new credentials from the user.
+                print("Bad wifi connection!")
+                print(wifi_credentials)
+                os.remove(WIFI_FILE)
+                machine_reset()
+
+    except Exception:
+        # Either no wifi configuration file found, or something went wrong, 
+        # so go into setup mode.
+        return False
 
 
 # Start the web server...
-server.run()
+if __name__ == "__main__":
+    if not connect_wifi():
+        setup_mode()
+    else:
+        application_mode()
+    server.run()
