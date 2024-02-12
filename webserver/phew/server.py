@@ -1,4 +1,4 @@
-import uasyncio, os, time
+import uasyncio, os, time #type: ignore
 from . import logging
 
 _routes = []

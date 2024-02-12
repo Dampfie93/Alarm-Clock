@@ -18,7 +18,10 @@ class FileManager:
                 return [cls.from_dict(item) for item in data]
         except OSError:
             return []
-
+        except ValueError:
+            # Handles cases where the JSON is empty or malformed
+            return []
+            
     @classmethod
     def to_json(cls, lst):
         data = [item.to_dict() for item in lst]

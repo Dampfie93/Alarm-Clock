@@ -22,9 +22,9 @@ def testAlarmList():
         # Alarm(True, time()+7200, 1, "1111111")
     ]
     Alarm.setAlarmListtoJson(alarm_list_init)
-    Alarm.getAlarmListfromJson()
 
 def init():
+    Alarm.getAlarmListfromJson()
     log ("DEBUG",  f"ALARMS: {len(Alarm.alarm_list)}")
     log ("DEBUG",  f"RFIDS: {len(RFIDManager.rfids)}")
     log ("DEBUG", f"{convert_unix('date')}")
@@ -56,7 +56,12 @@ def main():
     restart=True
     while restart:
         restart = False
-
+        # Check if time is correct every hour
+        if time() % 3600 == 0:
+            setTimeAPI()
+        # Check if alarm list is updated every minute
+        if time() % 60 == 0:
+            Alarm.getAlarmListfromJson()
         # Check if alarm is active
         if state() != "alarm":
             if Alarm.checkList():
@@ -85,13 +90,17 @@ def blinkLED():
     else:
         led_onboard.off()
 
+
 if __name__ == "__main__":
-    init()
     if not connect_wifi():
-        setup_mode()
+        core1 = _thread.start_new_thread(start, ("ap", ))
     else:
         setTimeAPI()
-        application_mode()
-    _thread.start_new_thread(server.run(), ())
+        core1 = _thread.start_new_thread(start, ("sta", ))
+    init()
     main()
-    # _thread.start_new_thread(main, ())
+    # if not connect_wifi():
+    #     start("ap")
+    # else:
+    #     setTimeAPI()
+    #     start("app")

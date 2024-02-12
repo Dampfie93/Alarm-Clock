@@ -163,3 +163,7 @@ utils/myWLAN_config.py
 .micropico
 secret.py
 webserver/wifi.json
+log.txt
+data/Alarm.json
+webserver/log.txt
+events.log

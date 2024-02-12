@@ -1,9 +1,12 @@
-from webserver import *
+from webserver.phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
+from webserver.phew.template import render_template
 import json
 import machine #type: ignore
 import os
 import time
 import _thread
+from sys import path
+path.append("..")
 from alarm_manager import Alarm
 from utils import convert_datetime, convert_unix
 
@@ -62,7 +65,7 @@ def application_mode():
 
     def app_index(request):
         set_alarm_list()
-        return render_template(f"{APP_TEMPLATE_PATH}/index.html", datetime_time = get_datetime())
+        return render_template(f"{APP_TEMPLATE_PATH}/index.html", datetime_time = get_datetime(), APP_TEMPLATE_PATH = APP_TEMPLATE_PATH)
     
     def get_datetime():
         year, month, day, hour, minute, _, _, _ = time.localtime(time.time())
@@ -72,7 +75,7 @@ def application_mode():
     def set_rtc_time(request):
         tuple = convert_datetime("rtc", request.form.get("datetime"))
         machine.RTC().datetime(tuple)
-        return render_template(f"{APP_TEMPLATE_PATH}/index.html", datetime_time = get_datetime())
+        return render_template(f"{APP_TEMPLATE_PATH}/index.html", datetime_time = get_datetime(), APP_TEMPLATE_PATH = APP_TEMPLATE_PATH)
 
     def app_get_time(request):
         return f"{time.gmtime()[3]:02d}:{time.gmtime()[4]:02d}"
@@ -86,7 +89,7 @@ def application_mode():
         os.remove(WIFI_FILE)
         # Reboot from new thread after we have responded to the user.
         _thread.start_new_thread(machine_reset, ())
-        return render_template(f"{APP_TEMPLATE_PATH}/reset.html", access_point_ssid = AP_NAME)
+        return render_template(f"{APP_TEMPLATE_PATH}/reset.html", access_point_ssid = AP_NAME, APP_TEMPLATE_PATH = APP_TEMPLATE_PATH)
 
 
     def app_set_alarm(request):
@@ -115,7 +118,7 @@ def application_mode():
         # Add alarm to list
         time, repeat, weekday = Alarm.addAlarm(hour, minute, repeat, weekday)
         print(time, repeat, weekday)
-        return render_template(f"{APP_TEMPLATE_PATH}/setalarm.html", alarmtime=time, weekdays=weekday_str)
+        return render_template(f"{APP_TEMPLATE_PATH}/setalarm.html", alarmtime=time, weekdays=weekday_str, APP_TEMPLATE_PATH = APP_TEMPLATE_PATH)
     
     def set_alarm_list():
         # Update Alarm.alarm_list
@@ -168,7 +171,7 @@ def application_mode():
             # If the file doesn't exist, create it and then write the data
             with open(file_name, 'x') as file:
                 file.write(str)
-        return render_template(f"{APP_TEMPLATE_PATH}/alarm_list.html")
+        return render_template(f"{APP_TEMPLATE_PATH}/alarm_list.html", APP_TEMPLATE_PATH = APP_TEMPLATE_PATH)
 
     
     def app_catch_all(request):
@@ -217,6 +220,13 @@ def connect_wifi():
         # so go into setup mode.
         return False
 
+def start(mode):
+    if mode == "ap":
+        setup_mode()
+    else:
+        application_mode()
+
+    server.run()
 
 # Start the web server...
 if __name__ == "__main__":
