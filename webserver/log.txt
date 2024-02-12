@@ -1,0 +1,12 @@
+2024-02-09 06:33:53 [info     /  52kB] > starting catch all dns server on port 53
+2024-02-09 06:33:53 [info     /  50kB] > starting web server on port 80
+2021-01-01 00:03:18 [info     / 144kB] > starting catch all dns server on port 53
+2021-01-01 00:03:18 [info     / 141kB] > starting web server on port 80
+2021-01-01 00:03:56 [info     / 138kB] > starting catch all dns server on port 53
+2021-01-01 00:03:56 [info     / 147kB] > starting web server on port 80
+2024-02-09 06:43:17 [info     /  61kB] > starting catch all dns server on port 53
+2024-02-09 06:43:17 [info     /  59kB] > starting web server on port 80
+2024-02-09 06:46:07 [info     /  60kB] > starting catch all dns server on port 53
+2024-02-09 06:46:07 [info     /  58kB] > starting web server on port 80
+2021-01-01 00:02:53 [info     /  69kB] > starting catch all dns server on port 53
+2021-01-01 00:02:53 [info     /  67kB] > starting web server on port 80

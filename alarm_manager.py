@@ -49,7 +49,7 @@ class Alarm(FileManager):
     def checkAlarm(self):
         if self.repeat == -1 and not self.active:
             return None
-        else:
+        else:5 <= 5 und 125 >= 5
             checkActive  = self.active == True
             checkTime    = self.time <= time() and self.time+120 >= time()
             #checkWeekDay = self.weekday[gmtime()[6]] == "1"
