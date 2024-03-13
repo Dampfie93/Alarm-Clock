@@ -1,5 +1,5 @@
 from .mfrc522 import MFRC522
-from machine import Pin
+from machine import Pin # type:ignore
             
 reader = MFRC522(spi_id=0,sck=18,miso=4,mosi=19,cs=5,rst=22)
 pwr_rfid = Pin(26, Pin.OUT, value=0)
@@ -10,14 +10,12 @@ class RFIDReader():
         reader.init()
         (stat, tag_type) = reader.request(reader.REQIDL)
         #print('request stat:',stat,' tag_type:',tag_type)
-        if stat == reader.OK:
-            (stat, uid) = reader.SelectTagSN()
-            if stat == reader.OK:
-                return int.from_bytes(bytes(uid),"little",False) # type: ignore
-            else:
-                return False
-        else:
+        if not stat == reader.OK:
             return False
+        (stat, uid) = reader.SelectTagSN()
+        if not stat == reader.OK:
+            return False
+        return int.from_bytes(bytes(uid),"little",False) # type: ignore
         
     @staticmethod
     def power(state):
@@ -43,7 +41,7 @@ class RFIDManager():
 #         self.code         = code
     
     @classmethod
-    def check(cls):
+    def isCardFound(cls):
         RFIDReader.power(True)
         card = RFIDReader.read()
         for rfid in cls.rfids:

@@ -8,16 +8,24 @@ class Key:
         self.last_state = False
 
     def get_state(self):
-        if self.pin.value() == 0:
-            if self.state == False:
-                self.state = True
-                return True
-            else:
-                return False
-        else:
+        if self.state:
+            return False
+        
+        self.state = True
+        return True
+
+    
+    def get_state(self):
+        if self.pin.value():
             self.state = False
             return False
-    
+        if self.state:
+            return False
+        
+        self.state = True
+        return True
+
+
     def action(self):
         if self.key == 0:
             print("key0")
@@ -34,8 +42,7 @@ if __name__ == "__main__":
 
     while True:
         for key in keys:
-            if key.get_state():
-                key.action()
-            else:
+            if not key.get_state():
                 pass
+            key.action()
         sleep_ms(50)

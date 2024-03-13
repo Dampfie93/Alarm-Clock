@@ -6,7 +6,7 @@ from eink2in9.fonts import freesans20    as FONT_MEDIUM
 from eink2in9.fonts import Arial72_clock as FONT_CLOCK
 
 from time         import sleep, time, gmtime, mktime
-from utils.myTime import convert_unix, convert_datetime
+from utils import convert_unix
 
 class Display():
                
@@ -18,10 +18,7 @@ class Display():
         self.last_refresh   = True
 
     def checkTime(self):
-        if self.time_h != gmtime(time())[3] or self.time_m != gmtime(time())[4]:
-            return False
-        else:
-            return True
+        return not (self.time_h != gmtime(time())[3] or self.time_m != gmtime(time())[4])
     
     @staticmethod
     def printClock(x_offset,y_offset):
@@ -57,7 +54,7 @@ class Display():
 
             wri = Writer(epd, FONT_CLOCK)
             wri.set_textpos(epd, 0, 30)
-            wri.printstring(convert_unix("clock"), invert=True)
+            wri.printstring(convert_unix.clock(), invert=True)
             
         elif typ == "alarm":
             wri = Writer(epd, FONT_BIG)
@@ -89,7 +86,7 @@ class Display():
         self.last_refresh = refresh
         epd.sleep()
     
-    def update_time(self):
+    def updateTime(self):
         if self.checkTime() == False:
             self.show("time", False)
 

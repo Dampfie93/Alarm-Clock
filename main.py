@@ -4,7 +4,13 @@ from rc522      import *
 from utils      import *
 from webserver  import *
 from alarm_manager import Alarm
-
+# from webserver.phew import logging
+# logging.set_truncate_thresholds(11 * 1024, 8 * 1024)
+# logging.info("Info")
+# logging.warn("Warn")
+# logging.error("Error")
+# logging.debug("Debug")
+# logging.exception("Exception")
 from time import sleep, time
 import machine  #type: ignore
 import _thread
@@ -25,12 +31,10 @@ def testAlarmList():
 
 def init():
     Alarm.getAlarmListfromJson()
-    log ("DEBUG",  f"ALARMS: {len(Alarm.alarm_list)}")
-    log ("DEBUG",  f"RFIDS: {len(RFIDManager.rfids)}")
-    log ("DEBUG", f"{convert_unix('date')}")
-    display.show("hello", True)
+    logging.info(f"[INIT] ALARMS: {len(Alarm.alarm_list)}")
+    logging.info(f"[INIT] RFIDS:  {len(RFIDManager.rfids)}")
 
-    # server.run()
+    display.show("hello", True)
     state("time")
 
 def state(state=None):
@@ -41,42 +45,42 @@ def state(state=None):
     
     if state == "alarm":
         display.show("alarm", True)
+        logging.info("Alarm activated!")
 
     elif state == "alarm_off":
         display.show("alarm_off", True)
-        log("ALARM", f"disarmed")
+        logging.info("Alarm disarmed!")
 
     elif state == "time":
         display.show("time", False)
 
     MAIN_STATE = state
+    logging.debug(f"Main-State: {state}")
 
 
 def main():     
     restart=True
     while restart:
         restart = False
-        # Check if time is correct every hour
-        if time() % 3600 == 0:
+        if time() % 3600 == 0: # every hour
             setTimeAPI()
-        # Check if alarm list is updated every minute
-        if time() % 60 == 0:
+        if time() % 60 == 0: # every minute
             Alarm.getAlarmListfromJson()
         # Check if alarm is active
         if state() != "alarm":
-            if Alarm.checkList():
+            if Alarm.isAlarmActiveInList():
                 state("alarm")
         
         # Check if key is pressed
                 
         # Update Time
         if state() == "time":
-            display.update_time()
+            display.updateTime()
 
         # Alarm State
         elif state() == "alarm":
-            print(f"[{convert_unix('time')}] [ALARM] wartet auf rfid")
-            if RFIDManager.check():
+            logging.debug("waiting for RFID")
+            if RFIDManager.isCardFound():
                 state("alarm_off")
                 state("time")
         sleep(0.25)
@@ -93,14 +97,13 @@ def blinkLED():
 
 if __name__ == "__main__":
     if not connect_wifi():
+        logging.error("No connection to Wifi!")
+        logging.debug("Access Point started!")
         core1 = _thread.start_new_thread(start, ("ap", ))
     else:
         setTimeAPI()
+        logging.debug("Connected to Wifi!")
+        logging.debug("Starting Webserver!")
         core1 = _thread.start_new_thread(start, ("sta", ))
     init()
     main()
-    # if not connect_wifi():
-    #     start("ap")
-    # else:
-    #     setTimeAPI()
-    #     start("app")

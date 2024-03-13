@@ -1,8 +1,7 @@
 from .myFileManager import FileManager, log
-from .myRequests    import setTimeAPI, getWeather
-from .myTime        import convert_unix, convert_datetime
-from .myWLAN        import WLANManager, WLAN
-# from .config        import WLANConfig   #eigentlich nicht notwendig
+from .requests      import setTimeAPI, getWeather
+import convert_unix
+import convert_datetime
 
-__all__ = ['FileManager', 'log', 'setTimeAPI', 'getWeather', 'convert_unix', 'convert_datetime', 'WLANManager', 'WLAN']
+__all__ = ['FileManager', 'log', 'setTimeAPI', 'getWeather', 'convert_unix', 'convert_datetime']
 

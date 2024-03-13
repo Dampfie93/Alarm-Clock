@@ -30,7 +30,7 @@ class Alarm(FileManager):
         return ', '.join([f"{value}" for value in attributes_order])
 
     @classmethod
-    def checkList(cls):
+    def isAlarmActiveInList(cls):
         for alarm in cls.alarm_list:
             if alarm.checkAlarm() is False:
                 return False
@@ -49,12 +49,11 @@ class Alarm(FileManager):
     def checkAlarm(self):
         if self.repeat == -1 and not self.active:
             return None
-        else:
-            checkActive  = self.active == True
-            checkTime    = self.time <= time() and self.time+120 >= time()
-            #checkWeekDay = self.weekday[gmtime()[6]] == "1"
-            alarmTrigger = checkActive and checkTime
-            return alarmTrigger
+
+        checkActive  = self.active == True
+        checkTime    = self.time <= time() and self.time+120 >= time()
+        alarmTrigger = checkActive and checkTime
+        return alarmTrigger
         
     def setNextTrigger(self):
         self.active = False if self.repeat == 0 or self.repeat == -1 else self.active
@@ -64,7 +63,7 @@ class Alarm(FileManager):
                 if self.weekday[nextDay] =="1":
                     self.time +=i*24*3600
                     #self.time +=20
-                    log("ALARM", f"next: {convert_unix('date', self.time)} at {convert_unix('time', self.time)}")
+                    log("ALARM", f"next: {convert_unix.date(self.time)} at {convert_unix.time(self.time)}")
                     break
         Alarm.setAlarmListtoJson()
     

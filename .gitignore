@@ -167,3 +167,5 @@ log.txt
 data/Alarm.json
 webserver/log.txt
 events.log
+webserver/__pycache__/__init__.cpython-310.pyc
+webserver/phew/__pycache__/__init__.cpython-310.pyc

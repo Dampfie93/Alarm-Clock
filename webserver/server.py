@@ -131,7 +131,7 @@ def application_mode():
         str = "<h2>Alarme</h2>"
         for i, alarm in enumerate(Alarm.alarm_list):
             # Get alarm data
-            time = convert_unix("clock", alarm.time)
+            time = convert_unix.clock(alarm.time)
             active = alarm.active
             repeat = alarm.repeat
             checked = "checked" if active else ""
